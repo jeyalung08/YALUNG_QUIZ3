@@ -41,7 +41,8 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch {
             realm.query<Expense>().asFlow()
                 .map { expenseResults ->
-                    expenseResults.list.sumOf { it.amount }
+                    val expenses = expenseResults.list
+                    if (expenses.isEmpty()) 0.0 else expenses.sumOf { it.amount }
                 }
                 .collect { total ->
                     _totalExpenses.value = total
